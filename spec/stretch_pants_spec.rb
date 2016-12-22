@@ -7,7 +7,7 @@ describe StretchPants::Search do
   let (:es_response) { { hits: { hits: [ { :'_source' => { name: 'Tywin Lannister' } } ] } } }   # testing an ugly interface is ugly
 
   it 'should query the correct index based on the model name' do
-    Elasticsearch::Transport::Client.any_instance.should_receive(:search).with(hash_including(index: "people_#{configatron.core.search.es_env}")).and_return(es_response)
+    Elasticsearch::Transport::Client.any_instance.should_receive(:search).with(hash_including(index: "person_#{StretchPants.configuration.index_env}")).and_return(es_response)
     Person.filter(:house => 'Lannister').to_a
   end
 

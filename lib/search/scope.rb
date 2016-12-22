@@ -1,10 +1,17 @@
+require 'ostruct'
+require 'active_support/core_ext/hash/deep_merge'
+
 module StretchPants
   class Search
 
     class Scope
       include Enumerable
 
-      delegate :[], :blank?, :in_groups_of, :first, :each, :inspect, :to => :to_a
+      [:[], :blank?, :in_groups_of, :first, :each, :inspect].each do |method|
+        define_method :method do
+          to_a
+        end
+      end
 
       @chainables = []
 

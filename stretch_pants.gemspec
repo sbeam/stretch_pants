@@ -13,7 +13,12 @@ Gem::Specification.new do |s|
    s.files       += Dir.glob("spec/**/*")
 
    s.add_development_dependency('rspec')
+   s.add_development_dependency('pry')
+   s.add_development_dependency('pry-byebug')
    s.add_dependency('elasticsearch-client')
+   s.add_dependency('elasticsearch-transport')
+   s.add_dependency('hashie')
+   s.add_dependency('activesupport')
 
   s.description       = <<-desc
   chain ElasticSearch queries, filters and scopes together

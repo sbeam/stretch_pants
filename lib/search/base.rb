@@ -1,15 +1,7 @@
-require_dependency 'search/filters'
-require_dependency 'search/query'
-require_dependency 'search/scope'
-
 module StretchPants
   class Search
-
     class Base
-
-
       class << self
-
         def scoped &b
           Scope.chainable do |scope_klass|
             scope_klass.class_eval &b
@@ -33,12 +25,9 @@ module StretchPants
         end
 
         def index_name
-          "#{self.to_s.split('::').last.pluralize.underscore}_#{configatron.core.search.es_env}"
+          "#{self.to_s.split('::').join('_')}_#{StretchPants.configuration.index_env}"
         end
-
       end
-
     end
-
   end
 end

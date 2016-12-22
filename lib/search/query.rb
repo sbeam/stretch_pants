@@ -1,10 +1,12 @@
+require 'active_support/core_ext/object/blank'
+
 module StretchPants
   class Search
     class Query
 
       def self.find index_name, id
         query = { query: { match: { _id: id } } }
-        Search.perform(index_name, query).pop
+        Searcher.perform(index_name, query).pop
       end
 
       def initialize(index_name, query)
@@ -24,7 +26,7 @@ module StretchPants
 
         query.delete(:filter) if query[:filter] == {:and => []}
 
-        results = Search.perform @index_name, query
+        results = Searcher.perform @index_name, query
 
         @query.inclusions.each do |assoc, source_class|
           results.each_with_index do |res, i|
@@ -42,10 +44,15 @@ module StretchPants
       def build_filter_terms(filters)
         filters.map do |filter_type, filter_params|
           filter_params.map do |filter_values|
-            filter_klass = self.class.parent.const_get("#{filter_type.to_s.camelize}Filter")
+            filter_klass = StretchPants::Search.const_get(type_to_filter_klass(filter_type))
             filter_klass.new(filter_values).to_h
           end
         end.flatten
+      end
+
+      # poor man's camelize
+      def type_to_filter_klass(sym)
+        sym.to_s.gsub(/(\b|_)([a-z\d]*)/) { "#{$2.capitalize}"  } + "Filter"
       end
 
     end
